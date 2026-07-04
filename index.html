@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="ms" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unaa Journey</title>
+    <link rel="icon" href="gambar_icon.jpeg"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+
+
+    />
+
+    <style>
+      body {
+        font-family: "Montserrat", sans-serif;
+        cursor: none;
+        margin: 0;
+        overflow-x: hidden;
+        background: #fff1f2;
+      }
+
+      .cheetah-bg {
+        background-color: #fff1f2;
+        background-image: radial-gradient(circle, #d1a3a3 2px, transparent 2px);
+        background-size: 40px 40px;
+      }
+
+      .gradient-overlay {
+        background: linear-gradient(
+          135deg,
+          #ff9a9e 0%,
+          #fad0c4 50%,
+          #ff758c 100%
+        );
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
+      }
+
+      @keyframes gradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .cursor {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        position: fixed;
+        pointer-events: none;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.1s ease;
+        font-size: 20px;
+      }
+
+      h1,
+      h2 {
+        font-family: "Playfair Display", serif;
+      }
+
+      .floating {
+        animation: float 6s ease-in-out infinite;
+      }
+      @keyframes float {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-20px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+
+      #ambient-toggle {
+        cursor: pointer;
+      }
+
+    .image-stack {
+  position: relative;
+  width: 100%;
+  height: 440px;
+  cursor: pointer;
+  perspective: 1000px;
+}
+
+/* common style */
+.story-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  border-radius: 24px;
+  transition: all 0.6s ease;
+
+  box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+}
+
+/* FRONT image (clearly dominant) */
+.story-img.top {
+  z-index: 3;
+  transform: translateX(0px) translateY(0px) rotate(6deg) scale(1);
+  filter: brightness(1);
+}
+
+/* BACK image (clearly separated) */
+.story-img.bottom {
+  z-index: 1;
+  transform: translateX(25px) translateY(25px) rotate(-6deg) scale(0.92);
+  filter: brightness(0.85) blur(0.5px);
+  opacity: 0.95;
+}
+
+/* hover micro depth (optional but powerful) */
+.image-stack:hover .top {
+  transform: translateX(-5px) translateY(-5px) rotate(4deg) scale(1.02);
+}
+
+.image-stack:hover .bottom {
+  transform: translateX(35px) translateY(35px) rotate(-8deg) scale(0.9);
+}
+
+/* clicked state swap */
+.image-stack.active .top {
+  transform: translateX(30px) translateY(30px) rotate(-6deg) scale(0.92);
+  opacity: 0.9;
+  filter: brightness(0.85) blur(0.5px);
+  z-index: 1;
+}
+
+.image-stack.active .bottom {
+  transform: translateX(0px) translateY(0px) rotate(6deg) scale(1);
+  filter: brightness(1);
+  z-index: 3;
+}
+.image-stack:hover {
+  transform: scale(1.02);
+  transition: 0.3s ease;
+}
+body.locked {
+  overflow: hidden;
+  height: 100vh;
+}
+#start-overlay {
+  pointer-events: all;
+}
+
+
+
+.fade {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* delay control */
+.delay-1 {
+  animation-delay: 0s;
+}
+
+.delay-2 {
+  animation-delay: 1.2s;
+}
+    </style>
+  </head>
+  <body class="text-gray-900">
+    <div id="cursor" class="cursor">❤️</div>
+
+   <div id="start-overlay"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md">
+      <div class="text-center p-8">
+        <h2 class="text-white text-4xl mb-8">Welcome To Unaa World</h2>
+        <button
+          onclick="startJourney()"
+          class="px-8 py-4 bg-white text-pink-600 rounded-full font-bold text-xl hover:scale-105 transition-transform shadow-xl"
+        >
+          Start Unaa Journey
+        </button>
+      </div>
+    </div>
+
+   
+
+    <header
+      class="min-h-screen flex flex-col items-center justify-center relative overflow-hidden text-white"
+    >
+      <div class="cheetah-bg absolute inset-0 opacity-20"></div>
+      <div class="gradient-overlay absolute inset-0 opacity-80"></div>
+      <div class="z-10 text-center p-6">
+        <h1 class="text-6xl md:text-8xl font-bold mb-6 typewriter">
+          Memories About Unaa
+        </h1>
+        <p class="text-xl md:text-2xl italic opacity-90">
+         A journey that will never come to an end.
+        </p>
+        <p class="text-center text-pink-800">Click Arrow To Explore</p>
+        <div class="flex justify-center mb-6">
+          
+        <div
+          class="mt-12 animate-bounce cursor-pointer"
+          onclick="document.getElementById('spotify').scrollIntoView({ behavior: 'smooth' })"
+        >
+          <svg
+            class="w-10 h-10 mx-auto"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 14l-7 7m0 0l-7-7m7 7V3"
+            ></path>
+          </svg>
+        </div>
+      </div>
+    </header>
+<section id="spotify" class="h-screen flex items-center justify-center bg-pink-50">
+  <div class="w-full max-w-2xl px-6">
+    <iframe
+      style="border-radius:12px"
+      src="https://open.spotify.com/embed/track/0S5khBaA9wHWAbQ72daAEi?utm_source=generator"
+      width="100%"
+      height="352"
+      frameborder="0"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      loading="lazy"
+    ></iframe>
+   
+  </div>
+
+ 
+</section>
+    <section id="story" class="py-24 px-6 md:px-20 relative z-10 bg-white/40">
+      <div
+        class="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-12"
+      >
+       <div class="w-full md:w-1/2">
+  <div class="image-stack" onclick="toggleStoryImage()">
+    
+    <img id="img1" src="1.JPG" class="story-img top active" />
+    <img id="img2" src="5.JPG" class="story-img bottom" />
+
+  </div>
+</div>
+        <div class="w-full md:w-1/2">
+          <h2 id="title" class="text-4xl font-bold mb-6 text-pink-900 typewriter delay-1">
+            My First Love
+          </h2>
+          <p id="text" class="text-lg leading-relaxed mb-8 text-gray-800 typewriter delaay-2">
+            <span class="typewriter-text">
+            
+          </p>
+          <button
+            onclick="
+              document
+                .getElementById('gallery')
+                .scrollIntoView({ behavior: 'smooth' })
+            "
+            class="px-8 py-3 bg-pink-600 text-white rounded-full font-semibold hover:bg-pink-700 transition transform hover:scale-105"
+          >
+            Explore More
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="gallery" class="py-24 px-6 relative z-10">
+      <h2 class="text-5xl text-center mb-16 text-pink-900 typewriter">
+        Memories Album
+      </h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div
+          class="floating p-4 bg-white rounded-2xl shadow-xl cursor-pointer"
+          onclick="
+            openModal(
+              'Memory 1',
+              'At that time, Qusy was missing Una so badly. Qusy still wasn’t used to stealing glances of Una in class, so that day Qusy didn’t get to see Una at all. Then suddenly, Una posted a story on IG using that picture. It eased the longing a little… even though Qusy ended up blushing a bit at that moment.',
+            )
+          "
+        >
+          <img src="3.jpg" class="rounded-xl w-full h-64 object-cover" />
+        </div>
+        <div
+          class="floating p-4 bg-white rounded-2xl shadow-xl cursor-pointer"
+          style="animation-delay: 1s"
+          onclick="
+            openModal(
+              'Memory 2',
+              'Today Qusy was extremely exhausted from lack of sleep and felt quite stressed thinking about Sir Fir’s assignment, especially after just returning from Friday prayer. But in the end, Qusy’s day slowly turned bright again, all because of a single picture that Una sent.',
+            )
+          "
+        >
+          <img src="4.jpg" class="rounded-xl w-full h-64 object-cover" />
+        </div>
+        <div
+          class="floating p-4 bg-white rounded-2xl shadow-xl cursor-pointer"
+          style="animation-delay: 2s"
+          onclick="
+            openModal(
+              'Memory 3',
+              'At that time, Qusy was missing Una so badly. Qusy still wasn’t used to stealing glances of Una in class, so that day Qusy didn’t get to see Una at all. Then suddenly, Una posted a story on IG using that picture. It eased the longing a little… even though Qusy ended up blushing a bit at that moment.',
+            )
+          "
+        >
+          <img src="2.JPG" class="rounded-xl w-full h-64 object-cover" />
+        </div>
+      </div>
+    </br>
+      <p class="text-center text-pink-800">Click Picture To Read</p>
+    </section>
+
+    <footer class="py-12 text-center bg-pink-100/50">
+      <p class="text-sm text-pink-800">Just by seeing Una, even on the worst days, Qusy always ends up feeling better. And that’s only from a picture.if Qusy were to hear Una’s soft, gentle voice, it would probably feel even more comforting than this.</p>
+      </footer>
+    <div
+      id="modal"
+      class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/60 backdrop-blur-sm p-6"
+      onclick="closeModal()"
+    >
+      <div
+        class="bg-white p-8 rounded-3xl max-w-lg w-full shadow-2xl"
+        onclick="event.stopPropagation()"
+      >
+        <h3 id="modalTitle" class="text-3xl font-bold mb-4 text-pink-600"></h3>
+        <p id="modalContent" class="text-lg text-gray-700"></p>
+        <button
+          onclick="closeModal()"
+          class="mt-6 w-full py-3 bg-pink-500 text-white rounded-xl hover:bg-pink-600 transition"
+        >
+          Tutup
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const cursor = document.getElementById("cursor");
+   
+
+      window.addEventListener("mousemove", (e) => {
+        gsap.to(cursor, {
+          x: e.clientX - 20,
+          y: e.clientY - 20,
+          duration: 0.1,
+        });
+      });
+
+      function startJourney() {
+  document.body.classList.remove("locked");
+
+  const overlay = document.getElementById("start-overlay");
+  overlay.style.opacity = "0";
+
+  setTimeout(() => overlay.remove(), 700);
+}
+
+
+      function openModal(title, content) {
+        document.getElementById("modalTitle").innerText = title;
+        document.getElementById("modalContent").innerText = content;
+        document.getElementById("modal").classList.remove("hidden");
+      }
+
+      function closeModal() {
+        document.getElementById("modal").classList.add("hidden");
+      }
+
+      // GSAP Scroll Animations
+      gsap.registerPlugin(ScrollTrigger);
+      gsap.utils.toArray(".typewriter").forEach((el) => {
+        gsap.from(el, {
+          scrollTrigger: { trigger: el, start: "top 80%" },
+          opacity: 0,
+          y: 50,
+          duration: 1,
+          ease: "power2.out",
+        });
+      });
+      function toggleStoryImage() {
+  const stack = document.querySelector(".image-stack");
+  stack.classList.toggle("active");
+}
+document.body.classList.add("locked");
+
+function typeWriter(element, text, speed = 30, callback) {
+  let i = 0;
+
+  function typing() {
+    if (i < text.length) {
+      element.innerHTML += text.charAt(i);
+      i++;
+      setTimeout(typing, speed);
+    } else {
+      if (callback) callback();
+    }
+  }
+
+  typing();
+}
+
+window.addEventListener("load", () => {
+  const textEl = document.getElementById("text");
+
+  const content = ` Every moment with unaa is a gift. Qusy still remember
+Since Qusy met Una, every day without her feels like pain for Qusy. Back when those first feelings started, Qusy couldn’t even sit still in peace. But now, every second, minute, and hour spent with Una has become moments of pure happiness for Qusy. And Qusy hopes that this relationship can go even further and last for a long time.No words can describe
+how grateful I am for every memory we have made together.`;
+
+  setTimeout(() => {
+    typeWriter(textEl, content, 25);
+  }, 1200);
+});
+    </script>
+  </body>
+</html>
